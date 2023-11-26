@@ -3,10 +3,12 @@ import React, {useState} from "react";
 import AppInput from "../inputs/AppInput";
 import AuthHook from "../../hooks/auth.hook";
 import HttpService from "../../services/Http.service";
+import {useAtom} from "jotai/index";
+import {AppAtom} from "../../store";
 
 const RegisterForm = () => {
-
     const {register} = AuthHook(HttpService)
+    const [{isLoading}] = useAtom(AppAtom)
     const [validated, setValidated] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -66,7 +68,7 @@ const RegisterForm = () => {
                       type="password"
                       placeholder="Repeat password"
             />
-            <Button variant="success" className="mt-4 mb-2 w-100" type="submit">Register</Button>
+            <Button disabled={isLoading} variant="success" className="mt-4 mb-2 w-100" type="submit">Register</Button>
         </Form>
     )
 }

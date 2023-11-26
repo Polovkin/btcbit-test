@@ -2,7 +2,6 @@ import {FormControl, FormGroup, FormLabel} from "react-bootstrap";
 import React, {FC} from "react";
 
 interface AppInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-
     invalidFeedback?: string;
     label?: string;
     value?: string;
@@ -22,7 +21,7 @@ const AppInput: FC<AppInputProps> = (props) => {
     return (
         <FormGroup className="pb-4 mb-1 position-relative w-100" controlId={id}>
             {label && <FormLabel>{label}</FormLabel>}
-            <input className="form-control" onChange={handleChange}
+            <input value={value} className="form-control" onChange={handleChange}
                    {...rest}
             />
             <FormControl.Feedback className="position-absolute" type="invalid">{invalidFeedback}</FormControl.Feedback>

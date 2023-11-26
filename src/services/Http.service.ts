@@ -21,6 +21,7 @@ const INCORRECT_EMAIL = 'incorrect@email.com';
 const INCORRECT_PASSWORD = 'incorrect-password';
 
 class HttpService implements HttpServiceInterface {
+    baseApiUrl = `https://653fb0ea9e8bd3be29e10cd4.mockapi.io/api/v1`
 
     errorText = ({email, password}: { email?: string, password?: string }): string | null => {
         if (email && email === INCORRECT_EMAIL) {
@@ -76,13 +77,19 @@ class HttpService implements HttpServiceInterface {
         });
     }
 
-    //Mock fetch
     async baseFetch<T>(url: string, options?: RequestInit): Promise<T> {
-        if (url === '/mock/login' && options?.method === 'POST') {
-            const {email, password} = JSON.parse(options?.body?.toString() || '{}');
-            return await this.mockLogin(email, password) as unknown as T;
+        const response = await fetch(this.baseApiUrl + url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            ...options,
+        })
+
+        if (!response.ok) {
+            throw new Error(`${response.status}`)
         }
-        throw new Error('Not implemented');
+
+        return response.json()
     }
 
     async get<T>(url: string, options?: RequestInit): Promise<T> {
