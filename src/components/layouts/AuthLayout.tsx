@@ -1,25 +1,34 @@
 import React, {FC} from "react";
 import {Navigate, Outlet, useLocation} from "react-router-dom";
-
+import {useAtom} from "jotai";
+import {AppAtom, AuthAtom} from "../../store";
+import AppError from "../AppError";
 
 type Props = {
     isAuthenticated: boolean;
 }
 
 const AuthLayout: FC<Props> = ({isAuthenticated}) => {
+    const [{error}] = useAtom(AppAtom)
+    const [{otpStage}] = useAtom(AuthAtom)
     const location = useLocation()
+    const isAuthPage = ['/auth/login', '/auth/register', '/auth/otp'].includes(location.pathname)
 
-    if (['/auth/login', '/auth/register'].includes(location.pathname) && isAuthenticated) {
+    if (isAuthPage && isAuthenticated) {
         return <Navigate to="/"/>
     }
 
+    if (location.pathname === '/auth/otp') {
+        if (!otpStage) {
+            return <Navigate to="/auth/login"/>
+        }
+    }
+
     return (
-        <div className="d-flex flex-column flex-root">
-            <header>Auth header</header>
-            <div className="d-flex flex-row flex-column-fluid page">
-                <Outlet/>
-            </div>
-        </div>
+        <main className="container min-vh-100 d-flex justify-content-center align-items-center position-relative">
+            <AppError error={error}/>
+            <Outlet/>
+        </main>
     )
 }
 

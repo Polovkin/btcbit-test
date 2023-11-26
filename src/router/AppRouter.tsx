@@ -6,9 +6,12 @@ import AuthLayout from "../components/layouts/AuthLayout";
 import Login from "../components/views/Login";
 import Register from "../components/views/Register";
 import PageNotFound from "../components/views/PageNotFound";
+import {AuthAtom} from "../store";
+import {useAtom} from "jotai";
+import Otp from "../components/views/Otp";
 
 const AppRouter: FC = () => {
-    const isAuthenticated = false;
+    const [{isAuthenticated}] = useAtom(AuthAtom)
 
     return (
         <Routes>
@@ -18,6 +21,7 @@ const AppRouter: FC = () => {
             <Route path="/auth" element={<AuthLayout isAuthenticated={isAuthenticated}/>}>
                 <Route index path="login" element={<Login/>}/>
                 <Route path="register" element={<Register/>}/>
+                <Route path="otp" element={<Otp/>}/>
             </Route>
             <Route path="*" element={<PageNotFound />} />
         </Routes>
